@@ -2,6 +2,9 @@ Credit goes to [Josh tried Coding](https://www.youtube.com/@joshtriedcoding) - a
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+<img width="1436" alt="image" src="https://github.com/amitaisopher/SimilarityTool/assets/9464281/3e27f520-a94b-41e9-a1f6-bc7deb1434bf">
+
+
 ## Getting Started
 
 First, run the development server:
