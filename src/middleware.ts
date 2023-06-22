@@ -11,7 +11,7 @@ const redis = new Redis({
 
 const ratelimit = new Ratelimit({
     redis,
-    limiter: Ratelimit.slidingWindow(5,'1 h')
+    limiter: Ratelimit.slidingWindow(50, '1 h')
 });
 
 export default withAuth(
@@ -19,7 +19,7 @@ export default withAuth(
         const pathname = req.nextUrl.pathname; // relative path
 
         // Manage rate limiting
-        if(pathname.startsWith('/api')) {
+        if (pathname.startsWith('/api')) {
             const ip = req.ip ?? '127.0.0.1';
             try {
                 const { success } = await ratelimit.limit(ip);
@@ -29,14 +29,14 @@ export default withAuth(
                 return NextResponse.json({ error: 'Internal Server Error' });
             }
         }
-        
+
         // Manage route protection
         const token = await getToken({ req });
         const isAuth = !!token;
         const isAuthPage = pathname.startsWith('/login');
         const sensitiveRoutes = ['/dashboard'];
 
-        if(isAuthPage) {
+        if (isAuthPage) {
             if (isAuth) {
                 return NextResponse.redirect(new URL('/dashboard', req.url));
             }
@@ -47,12 +47,12 @@ export default withAuth(
             return NextResponse.redirect(new URL('/login', req.url));
         }
     }, {
-        callbacks: {
-            async authorized() {
-                return true;
-            }
+    callbacks: {
+        async authorized() {
+            return true;
         }
     }
+}
 );
 
 export const config = {

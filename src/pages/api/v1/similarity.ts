@@ -2,6 +2,8 @@ import { cosineSimilarity } from "@/helpers/cosine-similarity";
 import { withMethods } from "@/lib/api-middlewares/with-methods";
 import { db } from "@/lib/db";
 import { openai } from "@/lib/openai";
+import axios from "axios";
+import type { AxiosError } from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -18,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             error: 'Unauthorized'
         });
     }
-    
+
     try {
         const { text1, text2 } = reqSchema.parse(body);
         const validApiKey = await db.apiKey.findFirst({
@@ -36,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     model: 'text-embedding-ada-002',
                     input: text
                 });
-                return res.data.data[0].embedding;    
+                return res.data.data[0].embedding;
             })
         );
         const similarity = cosineSimilarity(embeddings[0], embeddings[1]);
@@ -53,13 +55,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 usedApiKey: validApiKey.key
             }
         });
-        
+
         return res.status(200).json({ success: true, text1, text2, similarity });
-    } catch (error) {
+    } catch (error: any | AxiosError) {
+        if (error?.isAxiosError && error.response.status === 429) {
+            return res.status(500).json({ error: error.response.data.error.message });
+        }
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.issues });
         }
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 };
 
