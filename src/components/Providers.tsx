@@ -1,14 +1,17 @@
 'use client';
-import React, { ReactNode } from 'react';
-import { ThemeProvider } from 'next-themes';
-import { SessionProvider } from 'next-auth/react';
 
-const Providers = ({ children }: {children: ReactNode}) => {
+import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from 'next-themes';
+import type { FC, ReactNode } from 'react';
+
+interface ProvidersProps {
+  children: ReactNode
+}
+
+const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
     <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-        <SessionProvider>{children}</SessionProvider>
-        {/* Allow more height on mobile devices */}
-        <div className='h-40 md:hidden'></div>
+      <SessionProvider>{children}</SessionProvider>
     </ThemeProvider>
   );
 };

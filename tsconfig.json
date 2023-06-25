@@ -24,9 +24,6 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
       "@/styles/*": [
         "./src/styles/*"
       ],
@@ -38,6 +35,9 @@
       ],
       "@/ui/*": [
         "./src/components/ui/*"
+      ],
+      "@/*": [
+        "./src/*"
       ]
     }
   },
@@ -46,7 +46,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "/Users/amitaisopher/dev/similiraty-api/.next/types/**/*.ts"
+    "C:\\Users\\Josch\\Desktop\\similarity-api\\.next/types/**/*.ts",
+    "/Users/amitaisopher/dev/SimilarityTool/.next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

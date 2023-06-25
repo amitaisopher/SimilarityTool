@@ -1,11 +1,11 @@
-import { withMethods } from '@/lib/api-middlewares/with-methods';
-import { authOptions } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { CreateApiData } from '@/types/api/';
-import { nanoid } from 'nanoid';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
-import { z } from 'zod';
+import { withMethods } from "@/lib/api-middlewares/with-methods";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { CreateApiData } from "@/types/api/key";
+import { nanoid } from "nanoid";
+import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { z } from "zod";
 
 const handler = async (
   req: NextApiRequest,
@@ -15,10 +15,10 @@ const handler = async (
     const user = await getServerSession(req, res, authOptions).then(
       (res) => res?.user
     );
-      console.log('User: ', user);
+
     if (!user) {
       return res.status(401).json({
-        error: 'Unauthorized to perform this action.',
+        error: "Unauthorized to perform this action.",
         createdApiKey: null,
       });
     }
@@ -29,7 +29,7 @@ const handler = async (
 
     if (existingApiKey) {
       return res.status(400).json({
-        error: 'You already have a valid API key.',
+        error: "You already have a valid API key.",
         createdApiKey: null,
       });
     }
@@ -46,11 +46,11 @@ const handler = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.issues, createdApiKey: null });
     }
-    debugger;
+
     return res
       .status(500)
-      .json({ error: 'Internal Server Error', createdApiKey: null });
+      .json({ error: "Internal Server Error", createdApiKey: null });
   }
 };
 
-export default withMethods(['GET'], handler);
+export default withMethods(["GET"], handler);

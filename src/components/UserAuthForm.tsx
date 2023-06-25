@@ -2,35 +2,42 @@
 
 import { cn } from '@/lib/utils';
 import { signIn } from 'next-auth/react';
-import { FC, useState } from 'react';
-import Button from './ui/Button';
-import { toast } from './ui/Toast';
+import * as React from 'react';
+import { FC } from 'react';
+import { Button } from '@/ui/Button';
+import { toast } from '@/components/ui/Toast';
 
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const UserAuthForm: FC = ({}) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
   const loginWithGoogle = async () => {
     setIsLoading(true);
+
     try {
-        await signIn('google');
+      await signIn('google');
     } catch (error) {
-        toast({
-            title: 'Error',
-            message: 'There was an error logging in',
-            type: 'error'
-        });
+      toast({
+        title: 'Error',
+        message: 'There was an error logging in with Google',
+        type: 'error',
+      });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
-  
-  return <div className={cn('flex justify-center')}>
-    <Button 
-        isLoading={isLoading} 
-        className='max-w-sm w-full' 
-        onClick={loginWithGoogle} 
+
+  return (
+    <div className={cn('flex justify-center', className)} {...props}>
+      <Button
+        isLoading={isLoading}
+        type='button'
+        className='max-w-sm w-full bg-slate-200'
+        onClick={loginWithGoogle}
         disabled={isLoading}>
-        {isLoading ? null : <svg
+        {isLoading ? null : (
+          <svg
             className='mr-2 h-4 w-4'
             aria-hidden='true'
             focusable='false'
@@ -57,10 +64,11 @@ const UserAuthForm: FC = ({}) => {
             />
             <path d='M1 1h22v22H1z' fill='none' />
           </svg>
-          }
-          Google
-    </Button>
-  </div>;
+        )}
+        Google
+      </Button>
+    </div>
+  );
 };
 
 export default UserAuthForm;
